@@ -1,0 +1,39 @@
+{
+  "id" : "99084872-e36e-4e71-b7d0-f916f39ae8f1",
+  "name" : "services_data_v510_query",
+  "request" : {
+    "urlPath" : "/services/data/v53.0/query",
+    "method" : "GET",
+    "queryParameters" : {
+      "q": {
+        "equalTo": "SELECT Name FROM Account"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 00DJS0000000123!AQ0AQ.token"
+      },
+      "Sforce-Call-Options": {
+        "matches": "client=salesforce-api-client:\\d+\\.\\d+\\.\\d+(-[a-zA-Z]+)*"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"totalSize\":5,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Account\",\"url\":\"/services/data/v53.0/sobjects/Account/001JS0000000009YAA\"},\"Name\":\"An awesome test account\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"/services/data/v53.0/sobjects/Account/001JS0000000010YAA\"},\"Name\":\"Global Media\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"/services/data/v53.0/sobjects/Account/001JS0000000011YAA\"},\"Name\":\"Acme\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"/services/data/v53.0/sobjects/Account/001JS0000000012YAA\"},\"Name\":\"salesforce.com\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"/services/data/v53.0/sobjects/Account/001JS0000000013YAA\"},\"Name\":\"Sample Account for Entitlements\"}]}",
+    "headers" : {
+      "Date" : "Tue, 13 Apr 2021 11:33:05 GMT",
+      "Strict-Transport-Security" : "max-age=31536000; includeSubDomains",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "X-Robots-Tag" : "none",
+      "Cache-Control" : "no-cache,must-revalidate,max-age=0,no-store,private",
+      "Sforce-Limit-Info" : "api-usage=16/100000",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Vary" : "Accept-Encoding"
+    }
+  },
+  "uuid" : "99084872-e36e-4e71-b7d0-f916f39ae8f1",
+  "persistent" : true,
+  "insertionIndex" : 1
+}

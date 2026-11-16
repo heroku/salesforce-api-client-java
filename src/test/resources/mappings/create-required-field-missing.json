@@ -1,0 +1,40 @@
+{
+  "id": "20efd3ef-3b3a-4c68-9bde-6d42ed3e0554",
+  "name": "services_data_v510_sobjects_spaceship__c",
+  "request": {
+    "url": "/services/data/v53.0/sobjects/Spaceship__c",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\n    \"Name\": \"Falcon 9\"\n}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ],
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 00DJS0000000123!AQ0AQ.token"
+      },
+      "Sforce-Call-Options": {
+        "matches": "client=salesforce-api-client:\\d+\\.\\d+\\.\\d+(-[a-zA-Z]+)*"
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": "[{\"message\":\"Required fields are missing: [Website__c]\",\"errorCode\":\"REQUIRED_FIELD_MISSING\",\"fields\":[\"Website__c\"]}]",
+    "headers": {
+      "Date": "Wed, 14 Apr 2021 14:42:02 GMT",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "X-Robots-Tag": "none",
+      "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+      "Sforce-Limit-Info": "api-usage=61/100000",
+      "Content-Type": "application/json;charset=UTF-8"
+    }
+  },
+  "uuid": "20efd3ef-3b3a-4c68-9bde-6d42ed3e0554",
+  "persistent": true,
+  "insertionIndex": 1
+}

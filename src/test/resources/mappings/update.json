@@ -1,0 +1,39 @@
+{
+  "id": "d8405304-0f8e-43db-bc9a-25bcaf7632da",
+  "name": "services_data_v510_sobjects_movie__c_a00js0000000005yaa",
+  "request": {
+    "url": "/services/data/v53.0/sobjects/Movie__c/a00JS0000000005YAA",
+    "method": "PATCH",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\n    \"ReleaseDate__c\": \"1980-05-21\"\n}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ],
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 00DJS0000000123!AQ0AQ.token"
+      },
+      "Sforce-Call-Options": {
+        "matches": "client=salesforce-api-client:\\d+\\.\\d+\\.\\d+(-[a-zA-Z]+)*"
+      }
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "Date": "Wed, 14 Apr 2021 15:03:08 GMT",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "Content-Security-Policy": "upgrade-insecure-requests",
+      "X-Robots-Tag": "none",
+      "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+      "Sforce-Limit-Info": "api-usage=68/100000"
+    }
+  },
+  "uuid": "d8405304-0f8e-43db-bc9a-25bcaf7632da",
+  "persistent": true,
+  "insertionIndex": 9
+}

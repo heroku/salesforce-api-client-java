@@ -1,0 +1,30 @@
+{
+  "id" : "3b0c6f52-1d7e-4a8f-9c2e-6a1f0d4b7e21",
+  "name" : "services_data_v530_query_compound_fields",
+  "request" : {
+    "urlPath" : "/services/data/v53.0/query",
+    "method" : "GET",
+    "queryParameters" : {
+      "q": {
+        "equalTo": "SELECT Name, BillingAddress, Location__c FROM Account LIMIT 1"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 00DJS0000000123!AQ0AQ.token"
+      },
+      "Sforce-Call-Options": {
+        "matches": "client=salesforce-api-client:\\d+\\.\\d+\\.\\d+(-[a-zA-Z]+)*"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"totalSize\":1,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Account\",\"url\":\"/services/data/v53.0/sobjects/Account/001JS0000000004YAA\"},\"Name\":\"GenePoint\",\"BillingAddress\":{\"city\":\"Mountain View\",\"country\":\"United States\",\"countryCode\":\"US\",\"geocodeAccuracy\":null,\"latitude\":null,\"longitude\":null,\"postalCode\":\"94043\",\"state\":\"CA\",\"stateCode\":\"CA\",\"street\":\"345 Shoreline Park\"},\"Location__c\":{\"latitude\":37.4219,\"longitude\":-122.0841}}]}",
+    "headers" : {
+      "Content-Type" : "application/json;charset=UTF-8"
+    }
+  },
+  "uuid" : "3b0c6f52-1d7e-4a8f-9c2e-6a1f0d4b7e21",
+  "persistent" : true
+}

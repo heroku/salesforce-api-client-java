@@ -1,0 +1,30 @@
+{
+  "id" : "8e5d2a10-4c3b-4f6e-a7d9-2b8c1e0f9a34",
+  "name" : "services_data_v530_query_junction_id_list",
+  "request" : {
+    "urlPath" : "/services/data/v53.0/query",
+    "method" : "GET",
+    "queryParameters" : {
+      "q": {
+        "equalTo": "SELECT Subject, EventWhoIds FROM Event LIMIT 1"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 00DJS0000000123!AQ0AQ.token"
+      },
+      "Sforce-Call-Options": {
+        "matches": "client=salesforce-api-client:\\d+\\.\\d+\\.\\d+(-[a-zA-Z]+)*"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"totalSize\":1,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Event\",\"url\":\"/services/data/v53.0/sobjects/Event/00U7Q000002bBxKUAU\"},\"Subject\":\"Kickoff\",\"EventWhoIds\":[\"003JS0000000001YAA\",\"003JS0000000002YAA\"]}]}",
+    "headers" : {
+      "Content-Type" : "application/json;charset=UTF-8"
+    }
+  },
+  "uuid" : "8e5d2a10-4c3b-4f6e-a7d9-2b8c1e0f9a34",
+  "persistent" : true
+}

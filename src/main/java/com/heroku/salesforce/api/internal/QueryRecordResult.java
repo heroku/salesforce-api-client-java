@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2026, Salesforce, Inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+package com.heroku.salesforce.api.internal;
+
+import java.util.*;
+import javax.annotation.Nullable;
+
+public final class QueryRecordResult {
+  private final long totalSize;
+  private final boolean done;
+  private final List<RestApiRecord> records;
+  private final String nextRecordsPath;
+
+  public QueryRecordResult(
+      long totalSize, boolean done, List<RestApiRecord> records, @Nullable String nextRecordsPath) {
+    this.totalSize = totalSize;
+    this.done = done;
+    this.records = new ArrayList<>(records);
+    this.nextRecordsPath = nextRecordsPath;
+  }
+
+  public List<RestApiRecord> getRecords() {
+    return Collections.unmodifiableList(records);
+  }
+
+  public long getTotalSize() {
+    return totalSize;
+  }
+
+  public boolean isDone() {
+    return done;
+  }
+
+  public Optional<String> getNextRecordsPath() {
+    return Optional.ofNullable(nextRecordsPath);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    QueryRecordResult result = (QueryRecordResult) o;
+    return totalSize == result.totalSize
+        && done == result.done
+        && Objects.equals(records, result.records)
+        && Objects.equals(nextRecordsPath, result.nextRecordsPath);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(totalSize, done, records, nextRecordsPath);
+  }
+
+  @Override
+  public String toString() {
+    return "QueryRecordResult{"
+        + "totalSize="
+        + totalSize
+        + ", done="
+        + done
+        + ", records="
+        + records
+        + ", nextRecordsPath='"
+        + nextRecordsPath
+        + '\''
+        + '}';
+  }
+}

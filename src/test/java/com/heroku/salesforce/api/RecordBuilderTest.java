@@ -1,0 +1,147 @@
+/*
+ * Copyright (c) 2026, Salesforce, Inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+package com.heroku.salesforce.api;
+
+import static com.spotify.hamcrest.optional.OptionalMatchers.emptyOptional;
+import static com.spotify.hamcrest.optional.OptionalMatchers.optionalWithValue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import org.junit.jupiter.api.Test;
+
+public class RecordBuilderTest {
+  private final DataApi dataApi =
+      new DataApi(URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
+
+  @Test
+  public void testEmptyRecord() {
+    RecordBuilder recordBuilder = dataApi.newRecordBuilder("Movie__c");
+    Record record = recordBuilder.build();
+    assertThat(record.getFieldNames(), is(empty()));
+  }
+
+  @Test
+  public void testFieldNamesAreUnmodifiable() {
+    Record record = dataApi.newRecordBuilder("Movie__c").withField("Name", "Alien").build();
+
+    assertThrows(UnsupportedOperationException.class, () -> record.getFieldNames().clear());
+    assertThat(record.hasField("Name"), is(true));
+  }
+
+  @Test
+  public void testFieldNameCaseSensitivity() {
+    final String movieName = "Star Wars Episode IV - A New Hope";
+
+    RecordBuilder recordBuilder = dataApi.newRecordBuilder("Movie__c");
+    recordBuilder.withField("Name", movieName);
+    Record record = recordBuilder.build();
+
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("name")));
+
+    assertThat(record.hasField("Name"), is(true));
+    assertThat(record.hasField("name"), is(true));
+    assertThat(record.hasField("naME"), is(true));
+
+    assertThat(record.getStringField("Name"), is(optionalWithValue(equalTo(movieName))));
+    assertThat(record.getStringField("name"), is(optionalWithValue(equalTo(movieName))));
+    assertThat(record.getStringField("naME"), is(optionalWithValue(equalTo(movieName))));
+  }
+
+  @Test
+  public void testFieldNameCaseSensitivityWhenOverwritten() {
+    final String movieName1 = "Star Wars Episode IV - A New Hope";
+    final String movieName2 = "Star Wars Episode V - The Empire Strikes Back";
+
+    RecordBuilder recordBuilder = dataApi.newRecordBuilder("Movie__c");
+    recordBuilder.withField("Name", movieName1);
+    recordBuilder.withField("NAME", movieName2);
+    Record record = recordBuilder.build();
+
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("name")));
+
+    assertThat(record.hasField("Name"), is(true));
+    assertThat(record.hasField("NAME"), is(true));
+    assertThat(record.hasField("name"), is(true));
+    assertThat(record.hasField("naME"), is(true));
+
+    assertThat(record.getStringField("Name"), is(optionalWithValue(equalTo(movieName2))));
+    assertThat(record.getStringField("NAME"), is(optionalWithValue(equalTo(movieName2))));
+    assertThat(record.getStringField("name"), is(optionalWithValue(equalTo(movieName2))));
+    assertThat(record.getStringField("naME"), is(optionalWithValue(equalTo(movieName2))));
+  }
+
+  @Test
+  public void testWithoutField() {
+    RecordBuilder recordBuilder =
+        dataApi
+            .newRecordBuilder("Movie__c")
+            .withField("Name", "Star Wars")
+            .withField("Flavor__c", "Vanilla");
+
+    assertThat(
+        recordBuilder.getStringField("Flavor__c"), is(optionalWithValue(equalTo("Vanilla"))));
+
+    recordBuilder.withoutField("Flavor__c");
+
+    assertThat(recordBuilder.getStringField("Flavor__c"), is(emptyOptional()));
+    assertThat(recordBuilder.isNullField("Flavor__c"), is(false));
+
+    Record record = recordBuilder.build();
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("Name")));
+  }
+
+  @Test
+  public void testWithNullField() {
+    Record record = dataApi.newRecordBuilder("Movie__c").withNullField("Rating__c").build();
+
+    assertThat(record.isNullField("Rating__c"), is(true));
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("Rating__c")));
+  }
+
+  @Test
+  public void testWithFieldStringNull() {
+    Record record =
+        dataApi.newRecordBuilder("Movie__c").withField("Rating__c", (String) null).build();
+
+    assertThat(record.isNullField("Rating__c"), is(true));
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("Rating__c")));
+  }
+
+  @Test
+  public void testWithFieldBigDecimalNull() {
+    Record record =
+        dataApi.newRecordBuilder("Movie__c").withField("Rating__c", (BigDecimal) null).build();
+
+    assertThat(record.isNullField("Rating__c"), is(true));
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("Rating__c")));
+  }
+
+  @Test
+  public void testWithFieldBigIntegerNull() {
+    Record record =
+        dataApi.newRecordBuilder("Movie__c").withField("Rating__c", (BigInteger) null).build();
+
+    assertThat(record.isNullField("Rating__c"), is(true));
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("Rating__c")));
+  }
+
+  @Test
+  public void testWithFieldReferenceIdNull() {
+    Record record =
+        dataApi.newRecordBuilder("Movie__c").withField("Rating__c", (ReferenceId) null).build();
+
+    assertThat(record.isNullField("Rating__c"), is(true));
+    assertThat(record.getFieldNames(), contains(equalToIgnoringCase("Rating__c")));
+  }
+}

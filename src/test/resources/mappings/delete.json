@@ -1,0 +1,32 @@
+{
+  "id": "38eb30ec-e4de-4aab-bbb4-7764a48f65bf",
+  "name": "services_data_v510_sobjects_account_001js0000000002yaa",
+  "request": {
+    "url": "/services/data/v53.0/sobjects/Account/001JS0000000002YAA",
+    "method": "DELETE",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 00DJS0000000123!AQ0AQ.token"
+      },
+      "Sforce-Call-Options": {
+        "matches": "client=salesforce-api-client:\\d+\\.\\d+\\.\\d+(-[a-zA-Z]+)*"
+      }
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "Date": "Mon, 26 Apr 2021 14:09:10 GMT",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "Content-Security-Policy": "upgrade-insecure-requests",
+      "X-Robots-Tag": "none",
+      "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+      "Sforce-Limit-Info": "api-usage=17/100000"
+    }
+  },
+  "uuid": "38eb30ec-e4de-4aab-bbb4-7764a48f65bf",
+  "persistent": true,
+  "insertionIndex": 1
+}
