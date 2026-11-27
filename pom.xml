@@ -15,10 +15,12 @@
 
     <name>salesforce-api-client</name>
     <description>Simple client for the Salesforce REST API</description>
+    <url>https://github.com/heroku/salesforce-api-client-java</url>
 
     <licenses>
         <license>
             <name>BSD-3-Clause</name>
+            <url>https://opensource.org/licenses/BSD-3-Clause</url>
         </license>
     </licenses>
 
@@ -28,6 +30,18 @@
             <organization>Salesforce, Inc.</organization>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:heroku/salesforce-api-client-java.git</connection>
+        <developerConnection>scm:git:git@github.com:heroku/salesforce-api-client-java.git</developerConnection>
+        <url>https://github.com/heroku/salesforce-api-client-java</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/heroku/salesforce-api-client-java/issues</url>
+    </issueManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -222,6 +236,37 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.8</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <!-- Bound to deploy instead of verify so local builds don't need a GPG key -->
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.12.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
             </plugin>
         </plugins>
     </build>

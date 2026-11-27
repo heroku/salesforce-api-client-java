@@ -4,6 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    labels:
+      - "skip changelog"
+      - "dependencies"
     groups:
       github-actions:
         update-types:
@@ -14,6 +17,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    labels:
+      - "dependencies"
     groups:
       java:
         update-types:
