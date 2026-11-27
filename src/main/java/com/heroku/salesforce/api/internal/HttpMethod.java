@@ -9,6 +9,7 @@ package com.heroku.salesforce.api.internal;
 public enum HttpMethod {
   GET,
   POST,
+  PUT,
   PATCH,
   DELETE
 }

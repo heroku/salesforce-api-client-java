@@ -15,21 +15,18 @@ import com.heroku.salesforce.api.internal.ModifyRecordResult;
 import com.heroku.salesforce.api.internal.QueryNextRecordsRestApiRequest;
 import com.heroku.salesforce.api.internal.QueryRecordRestApiRequest;
 import com.heroku.salesforce.api.internal.QueryRecordResult;
-import com.heroku.salesforce.api.internal.RestApi;
-import com.heroku.salesforce.api.internal.RestApiErrorsException;
-import com.heroku.salesforce.api.internal.RestApiException;
+import com.heroku.salesforce.api.internal.SalesforceRestApiHttpClient;
 import com.heroku.salesforce.api.internal.UpdateRecordRestApiRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 /** Data API client to interact with data in a Salesforce org. */
 public final class DataApi {
-  private final RestApi restApi;
+  private final SalesforceRestApiHttpClient httpClient;
 
   /**
    * Creates a new data API client.
@@ -40,7 +37,7 @@ public final class DataApi {
    * @param accessToken The access token used to authenticate with the Salesforce org.
    */
   public DataApi(URI orgDomainUrl, String apiVersion, String accessToken) {
-    this.restApi = new RestApi(orgDomainUrl, apiVersion, accessToken);
+    this.httpClient = new SalesforceRestApiHttpClient(orgDomainUrl, apiVersion, accessToken);
   }
 
   /**
@@ -170,7 +167,7 @@ public final class DataApi {
 
     CompositeGraphRestApiRequest<ModifyRecordResult> request =
         new CompositeGraphRestApiRequest<>(
-            restApi.getOrgDomainUrl(), restApi.getApiVersion(), unitOfWork.getSubrequests());
+            httpClient.getOrgDomainUrl(), httpClient.getApiVersion(), unitOfWork.getSubrequests());
 
     Map<String, ModifyRecordResult> result = executeRequest(request);
 
@@ -191,7 +188,7 @@ public final class DataApi {
    */
   @Nonnull
   public String getAccessToken() {
-    return restApi.getAccessToken();
+    return httpClient.getAccessToken();
   }
 
   static JsonRestApiRequest<ModifyRecordResult> apiRequestForUpdate(Record record) {
@@ -216,49 +213,13 @@ public final class DataApi {
   private RecordQueryResult convertQueryRecordResult(QueryRecordResult queryRecordResult)
       throws DataApiException {
     try {
-      return BinaryFieldUtil.convert(queryRecordResult, restApi);
+      return BinaryFieldUtil.convert(queryRecordResult, httpClient);
     } catch (URISyntaxException | IOException e) {
       throw new DataApiException("Could not process API response!", e);
     }
   }
 
   private <T> T executeRequest(JsonRestApiRequest<T> request) throws DataApiException {
-    try {
-      return restApi.execute(request);
-    } catch (RestApiErrorsException restApiException) {
-      throw mapException(restApiException);
-    } catch (RestApiException e) {
-      throw new DataApiException("Exception while executing API request!", e);
-    } catch (IOException e) {
-      throw new DataApiException("IOException while executing API request!", e);
-    }
-  }
-
-  private static DataApiException mapException(RestApiErrorsException exception) {
-    StringBuilder builder = new StringBuilder("One or more API errors occurred:\n");
-    exception
-        .getApiErrors()
-        .forEach(error -> {
-          builder.append("\n");
-
-          builder.append("Code: ");
-          builder.append(error.getErrorCode());
-          builder.append("\n");
-
-          builder.append("Message: ");
-          builder.append(error.getMessage());
-          builder.append("\n");
-
-          builder.append("Fields: ");
-          builder.append(String.join(", ", error.getFields()));
-          builder.append("\n");
-        });
-
-    return new DataApiException(
-        builder.toString(),
-        exception.getApiErrors().stream()
-            .map(error ->
-                new DataApiError(error.getMessage(), error.getErrorCode(), error.getFields()))
-            .collect(Collectors.toList()));
+    return ApiExceptions.translate(() -> httpClient.execute(request));
   }
 }

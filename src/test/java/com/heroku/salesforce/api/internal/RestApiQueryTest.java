@@ -28,15 +28,16 @@ public class RestApiQueryTest {
   static WireMockExtension wireMock =
       WireMockExtension.newInstance().options(wireMockConfig().port(8080)).build();
 
-  private final RestApi restApi =
-      new RestApi(URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
+  private final SalesforceRestApiHttpClient httpClient =
+      new SalesforceRestApiHttpClient(
+          URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
 
   @Test
   public void queryWithNextRecordsUrl()
       throws IOException, RestApiErrorsException, RestApiException {
     QueryRecordRestApiRequest queryRequest =
         new QueryRecordRestApiRequest("SELECT RANDOM_1__c, RANDOM_2__c FROM Random__c");
-    QueryRecordResult result = restApi.execute(queryRequest);
+    QueryRecordResult result = httpClient.execute(queryRequest);
 
     assertThat(result.isDone(), is(false));
     assertThat(result.getTotalSize(), is(10000L));
@@ -51,11 +52,11 @@ public class RestApiQueryTest {
   public void queryMoreRecords() throws IOException, RestApiErrorsException, RestApiException {
     QueryRecordRestApiRequest queryRequest =
         new QueryRecordRestApiRequest("SELECT RANDOM_1__c, RANDOM_2__c FROM Random__c");
-    QueryRecordResult result = restApi.execute(queryRequest);
+    QueryRecordResult result = httpClient.execute(queryRequest);
 
     QueryNextRecordsRestApiRequest queryMoreRequest =
         new QueryNextRecordsRestApiRequest(result.getNextRecordsPath().get());
-    QueryRecordResult result2 = restApi.execute(queryMoreRequest);
+    QueryRecordResult result2 = httpClient.execute(queryMoreRequest);
 
     assertThat(result2.getRecords(), hasSize(2000));
   }
@@ -66,7 +67,7 @@ public class RestApiQueryTest {
         new QueryRecordRestApiRequest("SELECT Bacon__c FROM Account LIMIT 2");
 
     try {
-      restApi.execute(queryRequest);
+      httpClient.execute(queryRequest);
     } catch (RestApiErrorsException e) {
       assertThat(e.getApiErrors(), hasSize(1));
 
@@ -91,7 +92,7 @@ public class RestApiQueryTest {
         new QueryRecordRestApiRequest("SELEKT Name FROM Account");
 
     try {
-      restApi.execute(queryRequest);
+      httpClient.execute(queryRequest);
     } catch (RestApiErrorsException e) {
       assertThat(e.getApiErrors(), hasSize(1));
 
@@ -110,7 +111,7 @@ public class RestApiQueryTest {
   public void queryAccountNames() throws IOException, RestApiErrorsException, RestApiException {
     QueryRecordRestApiRequest queryRequest =
         new QueryRecordRestApiRequest("SELECT Name FROM Account");
-    QueryRecordResult result = restApi.execute(queryRequest);
+    QueryRecordResult result = httpClient.execute(queryRequest);
 
     assertThat(result.getTotalSize(), is(5L));
     assertThat(result.isDone(), is(true));
@@ -161,7 +162,7 @@ public class RestApiQueryTest {
         new QueryRecordRestApiRequest(
             "SELECT Account.Name, (SELECT Contact.FirstName, Contact.LastName FROM Account.Contacts) FROM Account LIMIT 5");
 
-    QueryRecordResult result = restApi.execute(queryRequest);
+    QueryRecordResult result = httpClient.execute(queryRequest);
 
     assertThat(result.isDone(), is(true));
 
@@ -300,7 +301,7 @@ public class RestApiQueryTest {
         new QueryRecordRestApiRequest(
             "SELECT Name, BillingAddress, Location__c FROM Account LIMIT 1");
 
-    QueryRecordResult result = restApi.execute(queryRequest);
+    QueryRecordResult result = httpClient.execute(queryRequest);
 
     Map<String, RestApiRecord.FieldValue> values = result.getRecords().get(0).getValues();
     assertThat(
@@ -325,7 +326,7 @@ public class RestApiQueryTest {
     QueryRecordRestApiRequest queryRequest =
         new QueryRecordRestApiRequest("SELECT Subject, EventWhoIds FROM Event LIMIT 1");
 
-    QueryRecordResult result = restApi.execute(queryRequest);
+    QueryRecordResult result = httpClient.execute(queryRequest);
 
     assertThat(
         result.getRecords().get(0).getValues().get("EventWhoIds"),

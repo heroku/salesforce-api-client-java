@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 final class UriUtil {
@@ -22,8 +23,18 @@ final class UriUtil {
   static URI withPathSegmentsAndQueryParameter(
       URI baseUri, String parameterName, String parameterValue, String... segments)
       throws URISyntaxException {
-    return build(
-        baseUri, encodedPath(segments), encode(parameterName) + "=" + encode(parameterValue));
+    return withPathSegmentsAndQueryParameters(
+        baseUri, Map.of(parameterName, parameterValue), segments);
+  }
+
+  static URI withPathSegmentsAndQueryParameters(
+      URI baseUri, Map<String, String> parameters, String... segments) throws URISyntaxException {
+    String rawQuery =
+        parameters.entrySet().stream()
+            .map(entry -> encode(entry.getKey()) + "=" + encode(entry.getValue()))
+            .collect(Collectors.joining("&"));
+
+    return build(baseUri, encodedPath(segments), rawQuery.isEmpty() ? null : rawQuery);
   }
 
   static URI withPath(URI baseUri, String rawPath) throws URISyntaxException {

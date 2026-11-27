@@ -29,8 +29,9 @@ public class RestApiCreateTest {
   static WireMockExtension wireMock =
       WireMockExtension.newInstance().options(wireMockConfig().port(8080)).build();
 
-  private final RestApi restApi =
-      new RestApi(URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
+  private final SalesforceRestApiHttpClient httpClient =
+      new SalesforceRestApiHttpClient(
+          URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
 
   @Test
   public void create() throws RestApiErrorsException, IOException, RestApiException {
@@ -39,7 +40,7 @@ public class RestApiCreateTest {
     values.put("Rating__c", new JsonPrimitive("Excellent"));
 
     CreateRecordRestApiRequest request = new CreateRecordRestApiRequest("Movie__c", values);
-    ModifyRecordResult result = restApi.execute(request);
+    ModifyRecordResult result = httpClient.execute(request);
     assertThat(result.getId(), is(equalTo("a00JS0000000004YAA")));
   }
 
@@ -52,7 +53,7 @@ public class RestApiCreateTest {
     CreateRecordRestApiRequest request = new CreateRecordRestApiRequest("Movie__c", values);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       RestApiError error = e.getApiErrors().get(0);
 
@@ -78,7 +79,7 @@ public class RestApiCreateTest {
     CreateRecordRestApiRequest request = new CreateRecordRestApiRequest("PlayingCard__c", values);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       RestApiError error = e.getApiErrors().get(0);
 
@@ -102,7 +103,7 @@ public class RestApiCreateTest {
     CreateRecordRestApiRequest request = new CreateRecordRestApiRequest("Account", values);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       RestApiError error = e.getApiErrors().get(0);
 
@@ -128,7 +129,7 @@ public class RestApiCreateTest {
     CreateRecordRestApiRequest request = new CreateRecordRestApiRequest("Spaceship__c", values);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       RestApiError error = e.getApiErrors().get(0);
 

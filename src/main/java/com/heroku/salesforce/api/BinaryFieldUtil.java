@@ -9,8 +9,8 @@ package com.heroku.salesforce.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.heroku.salesforce.api.internal.QueryRecordResult;
-import com.heroku.salesforce.api.internal.RestApi;
 import com.heroku.salesforce.api.internal.RestApiRecord;
+import com.heroku.salesforce.api.internal.SalesforceRestApiHttpClient;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -33,11 +33,12 @@ final class BinaryFieldUtil {
         .orElse(false);
   }
 
-  static RecordQueryResult convert(QueryRecordResult queryRecordResult, RestApi restApi)
+  static RecordQueryResult convert(
+      QueryRecordResult queryRecordResult, SalesforceRestApiHttpClient httpClient)
       throws URISyntaxException, IOException {
     List<RecordWithSubQueryResults> records = new ArrayList<>();
     for (RestApiRecord record : queryRecordResult.getRecords()) {
-      records.add(convert(record, restApi));
+      records.add(convert(record, httpClient));
     }
 
     return new RecordQueryResult(
@@ -47,7 +48,8 @@ final class BinaryFieldUtil {
         records);
   }
 
-  static RecordWithSubQueryResults convert(RestApiRecord record, RestApi restApi)
+  static RecordWithSubQueryResults convert(
+      RestApiRecord record, SalesforceRestApiHttpClient httpClient)
       throws URISyntaxException, IOException {
     final String recordObjectType = record.getAttributes().get("type").getAsString();
 
@@ -59,16 +61,16 @@ final class BinaryFieldUtil {
 
       if (value.isJsonData()) {
         if (isBinaryField(recordObjectType, fieldEntry.getKey())) {
-          ByteBuffer data = restApi.downloadFile(value.getJsonData().getAsString());
+          ByteBuffer data = httpClient.downloadFile(value.getJsonData().getAsString());
           fieldValues.put(fieldEntry.getKey(), new FieldValue(data));
         } else {
           fieldValues.put(fieldEntry.getKey(), new FieldValue(value.getJsonData()));
         }
       } else if (value.isRecordData()) {
         fieldValues.put(
-            fieldEntry.getKey(), new FieldValue(convert(value.getRecordData(), restApi)));
+            fieldEntry.getKey(), new FieldValue(convert(value.getRecordData(), httpClient)));
       } else if (value.isQueryRecordResult()) {
-        subQueryResults.put(fieldEntry.getKey(), convert(value.getQueryRecordResult(), restApi));
+        subQueryResults.put(fieldEntry.getKey(), convert(value.getQueryRecordResult(), httpClient));
       }
     }
 

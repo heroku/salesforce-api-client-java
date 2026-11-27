@@ -151,6 +151,7 @@ public class CompositeGraphRestApiRequest<T> extends JsonRestApiRequest<Map<Stri
     return switch (method) {
       case GET -> "GET";
       case POST -> "POST";
+      case PUT -> "PUT";
       case PATCH -> "PATCH";
       case DELETE -> "DELETE";
     };

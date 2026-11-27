@@ -29,8 +29,9 @@ public class RestApiUpdateTest {
   static WireMockExtension wireMock =
       WireMockExtension.newInstance().options(wireMockConfig().port(8080)).build();
 
-  private final RestApi restApi =
-      new RestApi(URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
+  private final SalesforceRestApiHttpClient httpClient =
+      new SalesforceRestApiHttpClient(
+          URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
 
   @Test
   public void update() throws RestApiErrorsException, IOException, RestApiException {
@@ -40,7 +41,7 @@ public class RestApiUpdateTest {
     UpdateRecordRestApiRequest request =
         new UpdateRecordRestApiRequest("a00JS0000000005YAA", "Movie__c", values);
 
-    ModifyRecordResult result = restApi.execute(request);
+    ModifyRecordResult result = httpClient.execute(request);
     assertThat(result.getId(), is(equalTo("a00JS0000000005YAA")));
   }
 
@@ -53,7 +54,7 @@ public class RestApiUpdateTest {
         new UpdateRecordRestApiRequest("a00JS0000000005IB1", "Movie__c", values);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       RestApiError error = e.getApiErrors().get(0);
 
@@ -78,7 +79,7 @@ public class RestApiUpdateTest {
         new UpdateRecordRestApiRequest("a00JS0000000005IB1", "Movie__c", values);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       RestApiError error = e.getApiErrors().get(0);
 

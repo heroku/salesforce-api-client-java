@@ -8,6 +8,7 @@ package com.heroku.salesforce.api.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 
 public class JsonRequestBody implements RestApiRequestBody {
@@ -27,7 +28,8 @@ public class JsonRequestBody implements RestApiRequestBody {
   }
 
   @Override
-  public byte[] getRequestContents() {
-    return new Gson().toJson(this.jsonElement).getBytes(StandardCharsets.UTF_8);
+  public HttpRequest.BodyPublisher getBodyPublisher() {
+    return HttpRequest.BodyPublishers.ofByteArray(
+        new Gson().toJson(this.jsonElement).getBytes(StandardCharsets.UTF_8));
   }
 }

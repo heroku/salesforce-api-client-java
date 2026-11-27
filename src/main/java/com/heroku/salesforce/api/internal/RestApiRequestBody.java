@@ -6,8 +6,10 @@
  */
 package com.heroku.salesforce.api.internal;
 
+import java.net.http.HttpRequest;
+
 public interface RestApiRequestBody {
   String getContentType();
 
-  byte[] getRequestContents();
+  HttpRequest.BodyPublisher getBodyPublisher();
 }

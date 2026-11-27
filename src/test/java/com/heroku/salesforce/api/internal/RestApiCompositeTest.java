@@ -30,8 +30,9 @@ public class RestApiCompositeTest {
   static WireMockExtension wireMock =
       WireMockExtension.newInstance().options(wireMockConfig().port(8080)).build();
 
-  private final RestApi restApi =
-      new RestApi(URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
+  private final SalesforceRestApiHttpClient httpClient =
+      new SalesforceRestApiHttpClient(
+          URI.create("http://localhost:8080/"), "53.0", "00DJS0000000123!AQ0AQ.token");
 
   @Test
   public void compositeSingleCreate() throws RestApiErrorsException, IOException, RestApiException {
@@ -44,8 +45,8 @@ public class RestApiCompositeTest {
 
     CompositeGraphRestApiRequest<ModifyRecordResult> request =
         new CompositeGraphRestApiRequest<>(
-            restApi.getOrgDomainUrl(), restApi.getApiVersion(), subrequests);
-    Map<String, ModifyRecordResult> result = restApi.execute(request);
+            httpClient.getOrgDomainUrl(), httpClient.getApiVersion(), subrequests);
+    Map<String, ModifyRecordResult> result = httpClient.execute(request);
 
     assertThat(
         result,
@@ -63,10 +64,10 @@ public class RestApiCompositeTest {
 
     CompositeGraphRestApiRequest<ModifyRecordResult> request =
         new CompositeGraphRestApiRequest<>(
-            restApi.getOrgDomainUrl(), restApi.getApiVersion(), subrequests);
+            httpClient.getOrgDomainUrl(), httpClient.getApiVersion(), subrequests);
 
     try {
-      restApi.execute(request);
+      httpClient.execute(request);
     } catch (RestApiErrorsException e) {
       assertThat(
           e.getApiErrors(),
@@ -93,8 +94,8 @@ public class RestApiCompositeTest {
 
     CompositeGraphRestApiRequest<ModifyRecordResult> request =
         new CompositeGraphRestApiRequest<>(
-            restApi.getOrgDomainUrl(), restApi.getApiVersion(), subrequests);
-    Map<String, ModifyRecordResult> result = restApi.execute(request);
+            httpClient.getOrgDomainUrl(), httpClient.getApiVersion(), subrequests);
+    Map<String, ModifyRecordResult> result = httpClient.execute(request);
 
     assertThat(
         result,
@@ -127,8 +128,8 @@ public class RestApiCompositeTest {
 
     CompositeGraphRestApiRequest<ModifyRecordResult> request =
         new CompositeGraphRestApiRequest<>(
-            restApi.getOrgDomainUrl(), restApi.getApiVersion(), subrequests);
-    Map<String, ModifyRecordResult> result = restApi.execute(request);
+            httpClient.getOrgDomainUrl(), httpClient.getApiVersion(), subrequests);
+    Map<String, ModifyRecordResult> result = httpClient.execute(request);
 
     assertThat(
         result,
@@ -155,8 +156,8 @@ public class RestApiCompositeTest {
 
     CompositeGraphRestApiRequest<ModifyRecordResult> request =
         new CompositeGraphRestApiRequest<>(
-            restApi.getOrgDomainUrl(), restApi.getApiVersion(), subrequests);
-    Map<String, ModifyRecordResult> result = restApi.execute(request);
+            httpClient.getOrgDomainUrl(), httpClient.getApiVersion(), subrequests);
+    Map<String, ModifyRecordResult> result = httpClient.execute(request);
 
     assertThat(
         result,
